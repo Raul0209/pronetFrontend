@@ -1,0 +1,131 @@
+<nav class="navbar navbar-expand-lg navbar-white bg-dark">
+
+    <div class="container">
+        <a class="navbar-brand" href="#">
+            <img style="max-width:130px;" src="\assets\logo.png" alt="">
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+<span class="navbar-toggler-icon"></span>
+</button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <div class="mx-auto"></div>
+            <ul class="navbar-nav">
+                <li class="nav-item" routerLink="/home">
+                    <a class="nav-link text-white">Principal</a>
+                </li>
+                <li class="nav-item" routerLink="/exchange-rate">
+                    <a class="nav-link text-white">Tasa de cambio</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Contenedor para el contenido de la web -->
+<div class="container">
+
+    <!-- Tabla para mostar los valores consultados -->
+    <h2 class="mt-5" style="text-align: center;">Historial tasa de cambio</h2>
+
+
+    <div class="card radius shadow-lg" style="width: 100%">
+        <div class="card-body">
+            <button (click)="open(content)" type="button" class="btn btn-primary">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+                <path d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1z"/>
+              </svg>
+               Nueva consulta
+          </button>
+
+
+            <table class="table table-striped mt-5">
+                <thead>
+                    <tr>
+                        <th scope="col">No. Petición</th>
+                        <th scope="col">Del</th>
+                        <th scope="col">Al</th>
+                        <th scope="col">TC Venta</th>
+                        <th scope="col">TC Compra</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of data">
+                        <th scope="row">{{item.ID}}</th>
+                        <td>{{item.FECHA_INICIAL}}</td>
+                        <td>{{item.FECHA_FINAL}}</td>
+                        <td>{{item.PROMEDIO_VENTA}}</td>
+                        <td>{{item.PROMEDIO_COMPRA}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para crear una peticion -->
+<ng-template #content let-modal>
+    <div class="loader" *ngIf="isLoading">
+        <div class="spinner-border loader" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Generar consulta cambio</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    </div>
+    <div class="modal-body">
+        <form *ngIf="!showInfo">
+            <div class="form-group">
+                <label for="inicial">Fecha inicial</label>
+                <div class="input-group">
+                    <input [(ngModel)]="params.fechainit" id="inicial" class="form-control" placeholder="yyyy-mm-dd" name="init" ngbDatepicker #init="ngbDatepicker">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" (click)="init.toggle()" type="button">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar" viewBox="0 0 16 16">
+                            <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
+                          </svg>
+                        </button>
+                    </div>
+                </div>
+                <label for="final">Fecha final</label>
+                <div class="input-group">
+                    <input [(ngModel)]="params.fechafin" id="final" class="form-control" placeholder="yyyy-mm-dd" name="fin" ngbDatepicker #fin="ngbDatepicker">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" (click)="fin.toggle()" type="button">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar" viewBox="0 0 16 16">
+                            <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
+                          </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <form *ngIf="showInfo">
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="basic-addon1">Fecha inicial</span>
+                <input type="text" class="form-control" [value]="info.fechainit" aria-describedby="basic-addon1">
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="basic-addon1">Fecha final</span>
+                <input type="text" class="form-control" [value]="info.fechafin" aria-describedby="basic-addon1">
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="basic-addon1">Promedio venta</span>
+                <input type="text" class="form-control" [value]="info.totalVenta" aria-describedby="basic-addon1">
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="basic-addon1">Promedio compra</span>
+                <input type="text" class="form-control" [value]="info.totalCompra" aria-describedby="basic-addon1">
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button *ngIf="!showInfo" [disabled]="!params.fechafin || !params.fechainit" type="button" class="btn btn-outline-dark" (click)="obtenerPromedioTipoCambio()">Obtener promedio</button>
+        <button *ngIf="showInfo" type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Aceptar</button>
+
+    </div>
+</ng-template>

@@ -1,0 +1,18 @@
+.banner-image {
+    background-image: url(../../../assets/carrusel1.jpg);
+    background-size: cover;
+}
+
+.container-text-banner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.text-jumbotron {
+    opacity: 0.95;
+    font-family: parfair-bold-italic;
+    color: white;
+    padding-left: 500px;
+}
